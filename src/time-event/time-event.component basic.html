@@ -1,0 +1,99 @@
+<!-- <div class="log-container">
+    <h2> Time Tracker Application</h2>
+    <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
+      <label for="logDate">Date:</label>
+      <input type="date" formControlName="logDate" />
+  
+      <label for="hoursLogged">Hours Logged:</label>
+      <input type="number" formControlName="hoursLogged" min="1" />
+  
+      <label for="description">Description:</label>
+      <textarea formControlName="description"></textarea>
+  
+      <button type="submit" [disabled]="logForm.invalid">Add Log</button>
+    </form>
+  
+    <h3>Logs</h3>
+    <table border="1">
+        <tr>
+            <th>Day</th>
+            <th>Date</th>
+            <th>Hours</th>
+            <th>Description</th>
+
+        </tr>
+        <tr *ngFor="let log of logs">
+            <td>{{log.logDate|date:'EEEE'}}</td>
+            <td> {{log.logDate|date}}</td>
+            <td> {{log.hoursLogged}}</td>
+            <td>{{log.description}}</td>
+        </tr>
+
+    </table>
+
+  </div> -->
+  <!--new code below-->
+  <div class="container mt-4">
+    <h2>Time Tracker Application</h2>
+  
+    <!-- Logs Table -->
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>+</th>
+          <th>Day</th>
+          <th>Date</th>
+          <th>Hours</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs; let i = index">
+          <td>
+            <!-- <button class="btn btn-sm btn-outline-primary" (click)="openModal(log, i)">
+              <i class="fas fa-plus"></i>
+            </button> -->
+          </td>
+          <td>{{ log.logDate | date: 'EEEE' }}</td>
+          <td>{{ log.logDate | date }}</td>
+          <td>{{ log.hoursLogged }}</td>
+          <td>{{ log.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="logModalLabel">Log Entry</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+  
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="logDate" class="form-label">Date</label>
+                <input type="date" class="form-control" formControlName="logDate" />
+              </div>
+              <div class="mb-3">
+                <label for="hoursLogged" class="form-label">Hours Logged</label>
+                <input type="number" class="form-control" formControlName="hoursLogged" min="1" />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" formControlName="description"></textarea>
+              </div>
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="logForm.invalid">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
