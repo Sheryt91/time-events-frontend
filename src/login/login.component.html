@@ -1,0 +1,16 @@
+<div class="container mt-4">
+    <h3> Time Event Tracker App</h3>
+<form [formGroup]="loginForm" *ngIf="loginForm" (ngSubmit)="onSubmit()">
+    <div *ngFor="let field of loginFields" class="mb-3">
+        <label [for]="field.field" class="form-label">{{field.label}}</label>
+        <input 
+        [type]="field.type"
+        class="form-control"
+        [formControlName]="field.field"
+        [required]="field.required"/>
+    </div>
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
+        Login
+      </button>
+</form>
+</div>
