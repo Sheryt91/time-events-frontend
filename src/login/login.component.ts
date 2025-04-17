@@ -46,7 +46,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          localStorage.setItem('token', res.token);
+          // localStorage.setItem('token', res.token);
+          this.authService.saveToken(res.token);
           this.router.navigate(["/time-events"]);
         },
         error: (err) => {
