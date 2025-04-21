@@ -1,36 +1,56 @@
 import { Injectable } from '@angular/core';
 import { TimeEvent } from '../model/time-event';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeEventService {
-   
+  private apiUrl = "http://localhost:8080/api/time-events";
 
-  private apiUrl ="http://localhost:8080/api/time-events";
-  
+constructor(private http:HttpClient,
+             private authService: AuthService
+  ) { }
 
-  constructor(private http:HttpClient) { }
-
- // getConfig(userId: string, lang: string): Observable<any> {
-  // return this.http.get(`/api/uiconfig/${userId}/${lang}`);
-
-    getConfig(userId: string,lang:string): Observable<any> {
+  getConfig(userId: string, lang: string): Observable<any> {
     return this.http.get<any>(`http://localhost:8080/api/uiconfig/${userId}/${lang}`);
   }
-  getAllEvents():Observable<TimeEvent[]> {
-   return this.http.get<TimeEvent[]>(this.apiUrl);
-  }
-  addTimeEvent(newEvent: TimeEvent):Observable<TimeEvent> {
-    return this.http.post<TimeEvent>(this.apiUrl,newEvent);
+
+  getAllEvents(): Observable<TimeEvent[]> {
+    return this.http.get<TimeEvent[]>(this.apiUrl);
   }
 
-  deleteEvent(index: number) {
-    return this.http.delete<TimeEvent[]>(this.apiUrl+"/"+index);
+  getMyEvents():Observable<TimeEvent[]> {
+    const headers = this.setAuthTokenHeader();
+
+    return this.http.get<TimeEvent[]>('http://localhost:8080/api/time-events/my-events', { headers })
   }
-  updateTimeEvent(id:number,formValue: any) {
-    return this.http.put<TimeEvent>(this.apiUrl+"/"+id,formValue);
+  private setAuthTokenHeader() {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return headers;
+  }
+
+  addTimeEvent(newEvent: TimeEvent): Observable<TimeEvent> {
+    console.log('inside add event',newEvent);
+    const headers = this.setAuthTokenHeader();
+
+    return this.http.post<TimeEvent>(this.apiUrl, newEvent,{headers});
+  }
+
+  deleteEvent(id: number): Observable<void> {
+    const headers=this.setAuthTokenHeader();
+    return this.http.delete<void>(`${this.apiUrl}/${id}`,{headers});
+  }
+
+  updateTimeEvent(id: number, formValue: any): Observable<TimeEvent> {
+    const headers=this.setAuthTokenHeader();
+
+    return this.http.put<TimeEvent>(`${this.apiUrl}/${id}`, formValue,{headers});
   }
 }

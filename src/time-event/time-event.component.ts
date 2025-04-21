@@ -6,6 +6,7 @@ import { TimeEventService } from '../services/time-event.service';
 import { TimeEvent } from '../model/time-event';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 
 @Component({
@@ -22,20 +23,35 @@ export class TimeEventComponent {
   dialogFields: any[] = [];
   showModal: boolean = false;
   editIndex: number | null = null;
+  isLoggedIn: boolean = false;
+  username: any;
 
   constructor(private fb: FormBuilder,
-              private timeEventService: TimeEventService,
-              private authService: AuthService,
-              // private router: Router
-              ) { }
+    private timeEventService: TimeEventService,
+    private authService: AuthService,
+    // private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadUIConfig();
-    this.loadEvents();
-    this.editIndex = null;
+    this.username=localStorage.getItem('username');
+    const token = this.authService.getToken();
+    console.log('token', token)
+    if (token) {
+      try {
+        this.loadEvents();
+        this.editIndex = null;
+      }
+      catch (e) {
+        console.error('Invalid token', e);
+      }
+    }
+
   }
+
   loadEvents(): void {
-    this.timeEventService.getAllEvents().subscribe((data) => {
+    //  this.timeEventService.getAllEvents().subscribe((data) => {
+    this.timeEventService.getMyEvents().subscribe((data) => {
       this.events = data;
       console.log('Data in events:', this.events)
 
@@ -57,8 +73,12 @@ export class TimeEventComponent {
 
     if (this.logForm.invalid) return;
 
-    const formValue = this.logForm.value;
-
+   // const formValue = this.logForm.value;
+    const formValue = {
+      ...this.logForm.value,
+      username: this.username
+    };
+    console.log('formvalue', formValue)
     if (this.editIndex == null) {
       this.timeEventService.addTimeEvent(formValue).subscribe(() => {
         this.loadEvents();
@@ -82,7 +102,7 @@ export class TimeEventComponent {
   delete(index: number) {
     if (confirm('Are you sure you want to delete this log?')) {
       this.timeEventService.deleteEvent(index).subscribe(() => {
-        this.loadEvents();
+         this.loadEvents();
       });
     }
   }
@@ -109,6 +129,7 @@ export class TimeEventComponent {
     if (!data || data.length === 0) return;
 
     const headers = Object.keys(data[0]);
+    console.log('headers--export excel', headers)
     const csvRows = [
       headers.join(','), // header row
       ...data.map(row =>
