@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
   loginFields: any[] = [];
   loginForm!: FormGroup;
+  username: string | null | undefined;
 
 
   constructor(private fb: FormBuilder,
@@ -46,9 +47,12 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          // localStorage.setItem('token', res.token);
-          this.authService.saveToken(res.token);
-          this.router.navigate(["/time-events"]);
+           this.username = localStorage.getItem('username'); // Update the username after login
+          console.log('inside  login component',this.username)
+
+         // this.router.navigate(["/time-events"]);---TO-DO:Admin
+          this.router.navigate(["/my-events"]);
+
         },
         error: (err) => {
           alert('Login Failed');
@@ -59,4 +63,5 @@ export class LoginComponent implements OnInit {
 
     }
   }
+  
 }

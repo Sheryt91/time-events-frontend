@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">⏱️ Time Events Tracker</a>
+  
+      <div class="ms-auto d-flex align-items-center" *ngIf="isLoggedIn">
+        <span class="me-3">👋 Welcome, <strong>{{ username }}</strong></span>
+        <button class="btn btn-secondary btn-sm" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>

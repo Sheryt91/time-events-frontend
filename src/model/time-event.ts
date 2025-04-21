@@ -3,5 +3,6 @@ export class TimeEvent {
     logDate: string|undefined;
     hoursLogged: number|undefined;
     description: string="";
+    username:string | undefined;
 }
 
