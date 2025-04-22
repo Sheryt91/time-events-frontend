@@ -37,7 +37,6 @@ constructor(private http:HttpClient,
   }
 
   addTimeEvent(newEvent: TimeEvent): Observable<TimeEvent> {
-    console.log('inside add event',newEvent);
     const headers = this.setAuthTokenHeader();
 
     return this.http.post<TimeEvent>(this.apiUrl, newEvent,{headers});

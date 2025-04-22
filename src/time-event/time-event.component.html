@@ -1,80 +1,78 @@
 <div class="container mt-4">
-  <!-- <h3>Time Events Tracker</h3>
-  <div class="mb-3 text-end">
-    <span class="mr-3">👋 Welcome, <strong>{{ username }}</strong></span>
 
-    <button class="btn btn-secondary" (click)="logout()"> Logout</button>
-  </div>  -->
-<!--Add Button-->
-<div class="mb-3 text-end">
-  <button class="btn btn-success" (click)="openModal()">
-    <i class="fas fa-plus"></i> Add Event
-  </button>
-</div>
+  <!--Add Button-->
+  <div class="mb-3 text-end">
+    <button class="btn btn-success" (click)="openModal()">
+      <i class="fas fa-plus"></i> Add Event
+    </button>
+  </div>
 
   <!-- Logs Table -->
-<table class="table table-bordered table-striped">
-  <thead class="table-light">
-    <tr>
-      <th *ngFor="let col of columns">{{col.header}}</th>
-      <th colspan="2">Actions</th>
+  <table class="table table-bordered table-striped">
+    <thead class="table-light">
+      <tr>
+        @for(col of columns; track col.field){
+        <th>{{col.header}}</th>
+        }
+        <th colspan="2">Actions</th>
       </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let row of events;">
-      <td *ngFor="let col of columns"> 
-         {{ 
-          col.field === 'logDate' ? (row[col.field] | date:'dd-MM-yyyy') : row[col.field] }} 
-        </td>
-      <td> 
-        <button class="btn btn-sm btn-outline-primary me-1"  (click)="openModal(row)">
-          <i class="fas fa-edit"></i>
-        </button>
-      </td>
-      <td> 
-        <button class="btn btn-sm btn-danger" (click)="delete(row.id)"><i class="fas fa-trash-alt"></i></button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div class="mb-3 text-end">
- 
-  <button class="btn btn-success mb-2" (click)="exportToCSV(events)">Export to CSV</button>
-
-</div>
-<!-- Bootstrap Modal -->
-<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="showModal" style="background: rgba(0,0,0,0.5)">
-  <div class="modal-dialog" role="document">
-    <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="logModalLabel">
-            {{ editIndex !== null ? 'Edit Event' : 'Add Event' }}
-          </h5>
-          <button type="button" class="btn-close" (click)="closeModal()"  aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <div *ngFor="let field of dialogFields" class="mb-3">
-            <label for="logDate" class="form-label">{{field.label}}</label>
-            <input 
-            [type]="field.type"
-            class="form-control"
-            [formControlName]="field.field"
-            [required]="field.required"/>
-
-          </div>
-          
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="logForm.invalid">
-            {{ editIndex !== null ? 'Update' : 'Add' }}
+    </thead>
+    <tbody>
+      @for(row of events; track row.id){
+      <tr>
+        @for(col of columns; track col.field){
+        <td> {{ col.field === 'logDate' ? (row[col.field] | date:'dd-MM-yyyy') : row[col.field] }} </td>
+        }
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1" (click)="openModal(row)">
+            <i class="fas fa-edit"></i>
           </button>
-        </div>
-      </div>
-    </form>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger" (click)="delete(row.id)"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="mb-3 text-end">
+
+    <button class="btn btn-success mb-2" (click)="exportToCSV(events)">Export to CSV</button>
+
   </div>
-</div>
+  <!-- Bootstrap Modal -->
+  @if(showModal){
+  <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5)">
+    <div class="modal-dialog" role="document">
+      <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logModalLabel">
+              {{ editIndex !== null ? 'Edit Event' : 'Add Event' }}
+            </h5>
+            <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            @for(field of dialogFields; track field.field){
+            <div class="mb-3">
+              <label for="logDate" class="form-label">{{field.label}}</label>
+              <input [type]="field.type" class="form-control" [formControlName]="field.field"
+                [required]="field.required" />
+
+            </div>
+            }
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="logForm.invalid">
+              {{ editIndex !== null ? 'Update' : 'Add' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  }
 </div>

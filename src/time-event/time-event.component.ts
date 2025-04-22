@@ -36,7 +36,7 @@ export class TimeEventComponent {
     this.loadUIConfig();
     this.username=localStorage.getItem('username');
     const token = this.authService.getToken();
-    console.log('token', token)
+    // console.log('token', token)
     if (token) {
       try {
         this.loadEvents();
@@ -73,19 +73,17 @@ export class TimeEventComponent {
 
     if (this.logForm.invalid) return;
 
-   // const formValue = this.logForm.value;
     const formValue = {
       ...this.logForm.value,
       username: this.username
     };
-    console.log('formvalue', formValue)
+    // console.log('formvalue', formValue)
     if (this.editIndex == null) {
       this.timeEventService.addTimeEvent(formValue).subscribe(() => {
         this.loadEvents();
         this.closeModal();
       })
     } else {
-      console.log('editIndex', this.editIndex)
       this.timeEventService.updateTimeEvent(this.editIndex, formValue).subscribe(() => {
         this.loadEvents();
         this.closeModal();
@@ -134,7 +132,6 @@ export class TimeEventComponent {
     if (headers.indexOf('user') === -1) {
       headers.push('user'); // Ensure 'user' header is present
     }
-    console.log('headers--export excel', headers);
   
     const csvRows = [
       headers.join(','), // header row
@@ -162,9 +159,7 @@ export class TimeEventComponent {
   }
   
   logout() {
-    // localStorage.removeItem("token");
-    // this.router.navigate(["/login"]);
-    this.authService.logout();
+     this.authService.logout();
   }
 }
 
