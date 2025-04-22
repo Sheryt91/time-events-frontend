@@ -125,27 +125,42 @@ export class TimeEventComponent {
     });
   }
 
+ 
   exportToCSV(data: any[], filename: string = 'data.csv') {
     if (!data || data.length === 0) return;
-
-    const headers = Object.keys(data[0]);
-    console.log('headers--export excel', headers)
+  
+    // Get headers and exclude 'id' but keep 'user'
+    const headers = Object.keys(data[0]).filter(key => key !== 'id');
+    if (headers.indexOf('user') === -1) {
+      headers.push('user'); // Ensure 'user' header is present
+    }
+    console.log('headers--export excel', headers);
+  
     const csvRows = [
       headers.join(','), // header row
-      ...data.map(row =>
-        headers.map(field => `"${(row[field] ?? '').toString().replace(/"/g, '""')}"`).join(',')
-      )
+      ...data.map(row => {
+        // Extract username from user object
+        const rowWithUser = {
+          ...row,
+          user: row.user?.username || '', // Assuming `user` object has `username` field
+        };
+  
+        return headers.map(field =>
+          `"${(rowWithUser[field] ?? '').toString().replace(/"/g, '""')}"`
+        ).join(',');
+      })
     ];
-
+  
     const blob = new Blob([csvRows.join('\r\n')], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
-
+  
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
     window.URL.revokeObjectURL(url);
   }
+  
   logout() {
     // localStorage.removeItem("token");
     // this.router.navigate(["/login"]);
