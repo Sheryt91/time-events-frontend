@@ -19,13 +19,15 @@ constructor(private http:HttpClient,
   }
 
   getAllEvents(): Observable<TimeEvent[]> {
-    return this.http.get<TimeEvent[]>(this.apiUrl);
+    const headers = this.setAuthTokenHeader();
+
+    return this.http.get<TimeEvent[]>(`${this.apiUrl}/all-events`,{headers});
   }
 
   getMyEvents():Observable<TimeEvent[]> {
     const headers = this.setAuthTokenHeader();
 
-    return this.http.get<TimeEvent[]>('http://localhost:8080/api/time-events/my-events', { headers })
+    return this.http.get<TimeEvent[]>(`${this.apiUrl}/my-events`, { headers })
   }
   private setAuthTokenHeader() {
     const token = this.authService.getToken();
