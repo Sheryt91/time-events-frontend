@@ -71,4 +71,31 @@ private checkInitialLoginState(): boolean {
     this.router.navigate(['/login']);
   }
 
+  
+  // Validate the token to check if it is expired or invalid
+  isTokenValid(token: string): boolean {
+    try {
+      // Decode the JWT token
+      const decodedToken: any = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+
+      // Check if the token has expired
+      return decodedToken.exp > currentTime;  // true if not expired, false if expired
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;  // Return false if there's an error decoding the token
+    }
+  }
+
+  getRolesFromToken(token: string): string[] {
+    try {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.roles || [];  // Return roles from the token payload
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return [];
+    }
+  }
+  
+
 }

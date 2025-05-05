@@ -1,4 +1,21 @@
 <div class="container mt-4">
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link" 
+       [class.active]="activeTab === 'my'" 
+       (click)="switchTab('my')">
+      My Events
+    </a>
+  </li>
+  <li class="nav-item" *ngIf="isAdmin">
+    <a class="nav-link" 
+       [class.active]="activeTab === 'all'" 
+       (click)="switchTab('all')">
+      All Events
+    </a>
+  </li>
+</ul>
 
   <!--Add Button-->
   <div class="mb-3 text-end">
@@ -21,7 +38,8 @@
       @for(row of events; track row.id){
       <tr>
         @for(col of columns; track col.field){
-        <td> {{ col.field === 'logDate' ? (row[col.field] | date:'dd-MM-yyyy') : row[col.field] }} </td>
+        <td> {{ col.field === 'logDate' ? (row[col.field] | date:'dd-MM-yyyy') :
+               col.field==='user'?(row[col.field]?.username): row[col.field] }} </td>
         }
         <td>
           <button class="btn btn-sm btn-outline-primary me-1" (click)="openModal(row)">
