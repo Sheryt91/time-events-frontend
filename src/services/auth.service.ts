@@ -21,7 +21,6 @@ export class AuthService {
     return this.http.post<{ token: string, username: string }>(`${this.baseUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          console.log('inside authservice login',response.token,response.username)
             // Save token and username to localStorage or sessionStorage
         this.saveToken(response.token);
         this.saveUsername(response.username);
