@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
 
     this.commonService.getConfig(userId, lang).subscribe((config: any) => {
       this.loginFields = config.loginFields;
-      console.log('login config:', this.loginFields);
 
       const controls: any = {};
       for (let field of this.loginFields) {
@@ -61,7 +60,6 @@ export class LoginComponent implements OnInit {
             const decodedToken: any = jwtDecode(token);
             const roles: string[] = decodedToken.roles || [];
   
-            console.log('Decoded Roles:', roles);
   
             if (roles.includes('ROLE_ADMIN')) {
               this.router.navigate(['/time-events/all-events']);

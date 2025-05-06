@@ -90,7 +90,6 @@ export class TimeEventComponent {
     eventObservable.subscribe({
       next: (data) => {
         this.events = data;
-        console.log('Data in events:', this.events);
       },
       error: (err) => {
         console.error('Error fetching events:', err);
@@ -116,7 +115,6 @@ export class TimeEventComponent {
       ...this.logForm.value,
       username: this.username,
     };
-    // console.log('formvalue', formValue)
     if (this.editIndex == null) {
       this.timeEventService.addTimeEvent(formValue).subscribe(() => {
         this.loadEvents();
@@ -151,7 +149,6 @@ export class TimeEventComponent {
     const lang = 'eng';
 
     this.timeEventService.getConfig(userId, lang).subscribe((config: any) => {
-      console.log('config:', config);
 
       this.columns = config.columns;
       this.dialogFields = config.dialogFields;
@@ -176,7 +173,6 @@ export class TimeEventComponent {
       headers.push('user'); // Ensure 'user' header is present
     }
 
-    console.log('headers', headers);
 
     const csvRows = [
       headers.join(','), // header row
