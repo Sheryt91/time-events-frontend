@@ -7,6 +7,12 @@
       <input [type]="field.type" class="form-control" [formControlName]="field.field" [required]="field.required" />
     </div>
     }
+    @if(errorMessage){
+      <div  class="alert alert-danger mt-2">
+        {{ errorMessage }}
+      </div>
+    }
+  
     <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
       Login
     </button>
