@@ -11,6 +11,7 @@ import {
 import { Route, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { jwtDecode } from 'jwt-decode';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
   loginFields: any[] = [];
   loginForm!: FormGroup;
   username: string | null | undefined;
+  errorMessage: any;
 
   constructor(
     private fb: FormBuilder,
@@ -59,7 +61,7 @@ export class LoginComponent implements OnInit {
           if (token) {
             const decodedToken: any = jwtDecode(token);
             const roles: string[] = decodedToken.roles || [];
-  
+           this.errorMessage='';
   
             if (roles.includes('ROLE_ADMIN')) {
               this.router.navigate(['/time-events/all-events']);
@@ -72,6 +74,15 @@ export class LoginComponent implements OnInit {
             alert('Token not found');
           }
         },
+        
+    error: (error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        // Access the backend message
+        this.errorMessage = error.error?.message || 'Unauthorized access';
+      } else {
+        this.errorMessage = 'An unexpected error occurred';
+      }
+    }
       });
       //this.router.navigate(["/time-events"]);
     }

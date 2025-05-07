@@ -117,14 +117,14 @@ export class TimeEventComponent {
     };
     if (this.editIndex == null) {
       this.timeEventService.addTimeEvent(formValue).subscribe(() => {
-        this.loadEvents();
+        this.tabLoading();
         this.closeModal();
       });
     } else {
       this.timeEventService
         .updateTimeEvent(this.editIndex, formValue)
         .subscribe(() => {
-          this.loadEvents();
+          this.tabLoading();
           this.closeModal();
         });
     }
@@ -132,6 +132,12 @@ export class TimeEventComponent {
     this.editIndex = null;
     this.logForm.reset();
   }
+  private tabLoading() {
+    if (this.activeTab == 'all') {
+      this.loadEvents(true);
+    } else this.loadEvents(false);
+  }
+
   closeModal() {
     this.showModal = false;
   }
@@ -139,7 +145,7 @@ export class TimeEventComponent {
   delete(index: number) {
     if (confirm('Are you sure you want to delete this log?')) {
       this.timeEventService.deleteEvent(index).subscribe(() => {
-        this.loadEvents();
+        this.tabLoading();
       });
     }
   }
